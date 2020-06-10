@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1055481498028",
+    "firebase_url": "https://mi-recordatorios.firebaseio.com",
+    "project_id": "mi-recordatorios",
+    "storage_bucket": "mi-recordatorios.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055481498028:android:de7f650f4fd71a3ef41209",
+        "android_client_info": {
+          "package_name": "mx.tecnm.mirecordatorios"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055481498028-fuum5n74pbii90gtuujrp0e12eqtkoeb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "mx.tecnm.mirecordatorios",
+            "certificate_hash": "3434423406f10a9bbc896efc25342c705afda5c1"
+          }
+        },
+        {
+          "client_id": "1055481498028-oj6a3vqdg8g2l1ikke0fg0v4ces4ltf3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNuedvXxeS8Hh_2Kq2kjRPFiJwBDCT3j4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055481498028-oj6a3vqdg8g2l1ikke0fg0v4ces4ltf3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
