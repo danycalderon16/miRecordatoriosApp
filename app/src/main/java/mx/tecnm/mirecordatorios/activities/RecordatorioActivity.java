@@ -112,6 +112,8 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
         else
             toolbar.setTitle("Crear");
         setSupportActionBar(toolbar);
+        this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void crearRecordatorio() {
@@ -135,10 +137,11 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
         db.collection("usuarios")
                 .document(user.getUid())
                 .collection("recordatorios")
-                .add(mapR)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .document(generateToken(dia,hora)).set(mapR)
+                //.add(mapR)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onSuccess(Void aVoid) {
                         Log.i("////////////","Agregado Corretamente");
                         Toast.makeText(RecordatorioActivity.this, "Recordatorio Agregado", Toast.LENGTH_SHORT).show();
 
@@ -151,6 +154,7 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
                         Toast.makeText(RecordatorioActivity.this, "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
+        goMain(this);
     }
 
     @Override

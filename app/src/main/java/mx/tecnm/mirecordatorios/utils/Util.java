@@ -91,12 +91,12 @@ public class Util {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 String AM_PM;
-                if(hourOfDay < 12) {
+                if(hourOfDay < 12)
                     AM_PM = "a.m.";
-                } else {
-                    hourOfDay = hourOfDay-12;
+                else
                     AM_PM = "p.m.";
-                }
+                if(hourOfDay>12)
+                    hourOfDay = hourOfDay-12;
                 //Formateo el hora obtenido: antepone el 0 si son menores de 10
                 String horaFormateada =  (hourOfDay < 10)? String.valueOf(CERO + hourOfDay) : String.valueOf(hourOfDay);
                 //Formateo el minuto obtenido: antepone el 0 si son menores de 10
@@ -125,6 +125,13 @@ public class Util {
         String g[] = hora.split(" ");
         String h[] = g[0].split(":");
         String d[] = dia.split("/");
+        if (d[0].length()==1)
+            d[0] = "0"+d[0];
+        if(g[1].equals("p.m.") && Integer.parseInt(h[0])<12) {
+            Log.i("####","a-"+h[0]);
+            h[0] = (Integer.parseInt(h[0]) + 12) + "";
+            Log.i("####","b-"+h[0]);
+        }
         String token = (d[2])+""+mesNumrero(d[1])+""+d[0]+""+h[0]+""+h[1];
 
         return (token);
