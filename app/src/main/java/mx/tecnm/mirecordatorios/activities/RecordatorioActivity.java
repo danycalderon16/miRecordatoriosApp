@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,6 +53,7 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
 
     private SharedPreferences preferences;
 
+    private int theme;
     private int accion;
     private String hora;
     private String dia;
@@ -60,9 +62,13 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recordatorio);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+
+        preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+        theme = preferences.getInt("tema",0);
+        setCustomTheme(this,theme);
+        setContentView(R.layout.activity_recordatorio);
 
         sendBind();
         Bundle bundle = getIntent().getExtras();

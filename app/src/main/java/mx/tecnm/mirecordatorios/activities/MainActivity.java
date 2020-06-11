@@ -5,36 +5,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.squareup.picasso.Picasso;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TimePicker;
-import android.widget.Toast;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -63,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SharedPreferences preferences;
 
     private int alarmID = 1;
+    private int theme;
     private SharedPreferences settings;
 
     private MyAdapterReordatorios myAdapterReordatorios;
@@ -71,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
 
@@ -85,6 +76,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+        theme = preferences.getInt("tema",0);
+        setCustomTheme(this,theme);
+
+        setContentView(R.layout.activity_main);
+
         Map<String, Object> map = new HashMap<>();
         map.put("id",user.getUid());
         map.put("nombre",user.getDisplayName());
@@ -142,7 +138,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setToolbar(){
-        toolbar.setTitle(user.getDisplayName());
+        String nombre = preferences.getString("nombre",user.getDisplayName());
+        toolbar.setTitle(nombre);
         setSupportActionBar(toolbar);
     }
 
@@ -158,11 +155,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(getApplicationContext(), UserActivity.class);
+            startActivity(intent);
             return true;
         }
 
         if (id == R.id.action_logout){
             logOut();
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

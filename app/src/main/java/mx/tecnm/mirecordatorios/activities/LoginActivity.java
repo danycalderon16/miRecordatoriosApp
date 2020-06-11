@@ -52,11 +52,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button login_google;
 
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
 
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "GoogleActivity#########";
 
     private SharedPreferences preferences;
+    private SharedPreferences preferencesNombre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         FirebaseApp.initializeApp(this);
 
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+
 
         mAuth = FirebaseAuth.getInstance();
         callbackManager = CallbackManager.Factory.create();
@@ -117,6 +120,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             ingresado();
+                            user = mAuth.getCurrentUser();
                             saveLoginPreferences(GOOGLE);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -130,6 +134,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void saveLoginPreferences(int type) {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt("type",type);
+        editor.putString("nombre",user.getDisplayName());
         editor.apply();
     }
     // [END auth_with_google]
@@ -149,6 +154,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
                     ingresado();
+                    user = mAuth.getCurrentUser();
                     saveLoginPreferences(FACEBOOK);
                 }
                 else

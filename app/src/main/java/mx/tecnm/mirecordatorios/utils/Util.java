@@ -35,6 +35,10 @@ public class Util {
     private static final String CERO = "0";
     private static final String DOS_PUNTOS = ":";
 
+    public static final int ROJO = 3991;
+    public static final int AZUL = 3992;
+    public static final int VERDRE = 3993;
+    public static final int AMARILLO = 3994;
 
     //Variables para obtener la hora hora
     static int hora = c.get(Calendar.HOUR_OF_DAY);
@@ -47,6 +51,27 @@ public class Util {
 
     public static final int EDITAR = 2205;
     public static final int CREAR = 2206;
+
+    public static void setCustomTheme(Activity activity,int color){
+        switch (color){
+            case ROJO:
+                activity.setTheme(R.style.redTheme);
+                break;
+            case AMARILLO:
+                activity.setTheme(R.style.yellowTheme);
+                break;
+            case VERDRE:
+                activity.setTheme(R.style.AppTheme);
+                break;
+            case AZUL:
+                activity.setTheme(R.style.blueTheme);
+                break;
+                default:
+                    activity.setTheme(R.style.blueTheme);
+        }
+
+    }
+
 
     public static void goMain(Activity activity) {
         Intent intent = new Intent(activity, MainActivity.class);

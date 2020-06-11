@@ -15,9 +15,15 @@
     </style>
 
     <style name="blueTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">#03a9f4</item>
-        <item name="colorPrimaryDark">#0288d1</item>
-        <item name="colorAccent">#ffeb3b</item>
+        <item name="colorPrimary">#3F51B5</item>
+        <item name="colorPrimaryDark">#303F9F</item>
+        <item name="colorAccent">#9E9E9E</item>
+    </style>
+
+    <style name="yellowTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#FFC107</item>
+        <item name="colorPrimaryDark">#FFA000</item>
+        <item name="colorAccent">#448AFF</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
