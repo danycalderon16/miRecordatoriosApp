@@ -43,32 +43,35 @@ public class MyAdapterReordatorios extends FirestoreRecyclerAdapter<Recordatorio
             public void onClick(View v) {
                 listener.onItemClick(recordatorios, i);
             }
-        });  Log.i("########",getRandomColor()+"");
-        int j =  (int) (Math.random()* 7) + 1;
+        });
+        int j =  recordatorios.getColor();
 
         switch (j) {
             case 1:
                 viewHolder.view.setBackgroundResource(R.color.amber_primary);
                 break;
             case 2:
-                viewHolder.view.setBackgroundResource(R.color.pink_primary);
+                viewHolder.view.setBackgroundResource(R.color.indigo_primary);
                 break;
             case 3:
                 viewHolder.view.setBackgroundResource(R.color.green_primary);
                 break;
             case 4:
-                viewHolder.view.setBackgroundResource(R.color.red_primary);
+                viewHolder.view.setBackgroundResource(R.color.cyan_primary);
                 break;
             case 5:
-                viewHolder.view.setBackgroundResource(R.color.indigo_primary);
-                break;
-            case 6:
                 viewHolder.view.setBackgroundResource(R.color.orange_primary);
                 break;
+            case 6:
+                viewHolder.view.setBackgroundResource(R.color.black_light);
+                break;
             case 7:
-                viewHolder.view.setBackgroundResource(R.color.blue_primary);
+                viewHolder.view.setBackgroundResource(R.color.red_primary_light);
                 break;
         }
+
+        if(recordatorios.isImportante())
+            viewHolder.view.setBackgroundResource(R.color.red_primary_dark);
     }
 
     @NonNull

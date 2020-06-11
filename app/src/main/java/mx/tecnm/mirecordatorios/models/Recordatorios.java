@@ -5,14 +5,10 @@ public class Recordatorios {
     public String descripcion;
     public String hora;
     public String dia;
+    private int color;
+    private boolean importante;
 
     public Recordatorios() {
-    }
-
-    public Recordatorios(String descripcion, String hora, String dia) {
-        this.descripcion = descripcion;
-        this.hora = hora;
-        this.dia = dia;
     }
 
     public String getDescripcion() {
@@ -39,11 +35,30 @@ public class Recordatorios {
         this.dia = dia;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public boolean isImportante() {
+        return importante;
+    }
+
+    public void setImportante(boolean importante) {
+        this.importante = importante;
+    }
+
     @Override
     public String toString() {
-        return  "descripcion='" + descripcion + '\'' +
+        return "Recordatorios{" +
+                "descripcion='" + descripcion + '\'' +
                 ", hora='" + hora + '\'' +
                 ", dia='" + dia + '\'' +
+                ", color=" + color +
+                ", importante=" + importante +
                 '}';
     }
 }

@@ -6,13 +6,13 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="Configuraciones"
-        android:icon="@drawable/ic_action_settings"
+        android:icon="@drawable/ic_setting"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"
         android:title="Salir"
-        android:icon="@drawable/ic_action_exit"
+        android:icon="@drawable/log_out"
         app:showAsAction="always" />
 
 </menu>

@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
+    <color name="primaryText">#000</color>
     <!-- Material Design Color - Color palette -->
     <color name="black">#000</color>
     <color name="black_light">#282828</color>

@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent.putExtra("hora",recordatorios.getHora());
                 intent.putExtra("descripcion",recordatorios.getDescripcion());
                 intent.putExtra("accion",EDITAR);
+                intent.putExtra("importante",recordatorios.isImportante());
                 startActivity(intent);
             }
         });

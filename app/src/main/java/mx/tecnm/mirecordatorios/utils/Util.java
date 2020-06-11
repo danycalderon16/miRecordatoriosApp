@@ -36,9 +36,13 @@ public class Util {
     private static final String DOS_PUNTOS = ":";
 
     public static final int ROJO = 3991;
-    public static final int AZUL = 3992;
-    public static final int VERDRE = 3993;
-    public static final int AMARILLO = 3994;
+    public static final int MORADO = 3992;
+    public static final int AZUL = 3993;
+    public static final int CYAN = 3994;
+    public static final int VERDE = 3995;
+    public static final int AMARILLO = 3996;
+    public static final int NARANJA = 3997;
+    public static final int DARK = 3998;
 
     //Variables para obtener la hora hora
     static int hora = c.get(Calendar.HOUR_OF_DAY);
@@ -60,14 +64,26 @@ public class Util {
             case AMARILLO:
                 activity.setTheme(R.style.yellowTheme);
                 break;
-            case VERDRE:
+            case VERDE:
                 activity.setTheme(R.style.AppTheme);
                 break;
             case AZUL:
                 activity.setTheme(R.style.blueTheme);
                 break;
+            case MORADO:
+                activity.setTheme(R.style.purpleTheme);
+                break;
+            case CYAN:
+                activity.setTheme(R.style.cyanTheme);
+                break;
+            case NARANJA:
+                activity.setTheme(R.style.orangeTheme);
+                break;
+            case DARK:
+                activity.setTheme(R.style.darkTheme);
+                break;
                 default:
-                    activity.setTheme(R.style.blueTheme);
+                    activity.setTheme(R.style.AppTheme);
         }
 
     }
@@ -147,15 +163,14 @@ public class Util {
     }
 
     public static String generateToken(String dia, String hora) {
+        Log.i("####",hora+"- "+ dia);
         String g[] = hora.split(" ");
         String h[] = g[0].split(":");
         String d[] = dia.split("/");
         if (d[0].length()==1)
             d[0] = "0"+d[0];
         if(g[1].equals("p.m.") && Integer.parseInt(h[0])<12) {
-            Log.i("####","a-"+h[0]);
             h[0] = (Integer.parseInt(h[0]) + 12) + "";
-            Log.i("####","b-"+h[0]);
         }
         String token = (d[2])+""+mesNumrero(d[1])+""+d[0]+""+h[0]+""+h[1];
 

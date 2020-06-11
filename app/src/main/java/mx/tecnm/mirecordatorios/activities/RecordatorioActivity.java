@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,8 +15,11 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +57,7 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
     private EditText editTextDesc;
     private ImageView imageViewTime;
     private ImageView imageViewDate;
+    private Switch switch_importancia;
 
     private SharedPreferences preferences;
 
@@ -64,6 +69,8 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
 
     private String oldToken = "";
     private String newToken = "";
+    private boolean editar = false;
+    private boolean importante = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,11 +91,17 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
                 hora = bundle.getString("hora");
                 dia = bundle.getString("dia");
                 descripcion = bundle.getString("descripcion");
-                oldToken = generateToken(dia, hora);
+                editar = true;
+                importante = bundle.getBoolean("importante");
+                if(importante)
+                    oldToken = "zz"+generateToken(dia, hora);
+                else
+                    oldToken = "aa"+generateToken(dia, hora);
             }
         }
         setToolbar();
         setData();
+
     }
 
     private void setData() {
@@ -99,9 +112,6 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
         } else {
             setTime(textViewHora);
             setDate(textViewDia);
-            MenuItem menuItem = findViewById(R.id.item_delete);
-            menuItem.setVisible(false);
-
         }
     }
 
@@ -113,6 +123,7 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
         fab = findViewById(R.id.fab_save);
         imageViewDate = findViewById(R.id.dateImage);
         imageViewTime = findViewById(R.id.timeImage);
+        switch_importancia = findViewById(R.id.switch_importante);
 
         fab.setOnClickListener(this);
         textViewHora.setOnClickListener(this);
@@ -124,9 +135,9 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
     private void setToolbar() {
         toolbar.setTitle(user.getDisplayName());
         if (accion == EDITAR)
-            toolbar.setTitle("Editar");
+            toolbar.setTitle("Editar Recordatorio");
         else
-            toolbar.setTitle("Crear");
+            toolbar.setTitle("Crear Recordatorio");
         setSupportActionBar(toolbar);
         this.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -144,24 +155,36 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
         String horaN = textViewHora.getText().toString();
         String diaN = textViewDia.getText().toString();
 
-        Map<String, Object> mapR = new HashMap<>();
-        mapR.put("id", generateToken(diaN, horaN));
-        mapR.put("descripcion", texto);
-        mapR.put("hora", horaN);
-        mapR.put("dia", diaN);
-
         if(!oldToken.isEmpty()) {
             db.collection("usuarios")
                     .document(user.getUid())
                     .collection("recordatorios")
                     .document(oldToken)
                     .delete();
+            Log.i("#####",oldToken);
             Toast.makeText(this, "Actualizado", Toast.LENGTH_SHORT).show();
         }
+
+
+        int color =  (int) (Math.random()* 7) + 1;
+        Map<String, Object> mapR = new HashMap<>();
+        mapR.put("id", generateToken(diaN, horaN));
+        mapR.put("descripcion", texto);
+        mapR.put("hora", horaN);
+        mapR.put("dia", diaN);
+        mapR.put("color",color);
+        mapR.put("importante", switch_importancia.isChecked());
+
+        String token;
+        if(switch_importancia.isChecked())
+            token = "zz"+generateToken(diaN,horaN);
+        else
+            token = "aa"+generateToken(diaN,horaN);
+
         db.collection("usuarios")
                 .document(user.getUid())
                 .collection("recordatorios")
-                .document(generateToken(diaN, horaN)).set(mapR)
+                .document(token).set(mapR)
                 //.add(mapR)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -173,7 +196,6 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.i("%%%%%%%%%%", e.getMessage());
                         Toast.makeText(RecordatorioActivity.this, "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -183,6 +205,8 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_delete, menu);
+        if(!editar)
+            menu.findItem(R.id.item_delete).setVisible(false);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -202,12 +226,20 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void eliminarRecordatorio() {
+        Log.i("####","old"+oldToken);
         db.collection("usuarios")
                 .document(user.getUid())
                 .collection("recordatorios")
                 .document(oldToken)
                 .delete();
+    }
 
+    public static void hideKeyboard(Activity activity) {
+        View view = activity.findViewById(android.R.id.content);
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     @Override
@@ -224,7 +256,6 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
             case R.id.dateImage:
                 getDate(RecordatorioActivity.this, textViewDia);
                 break;
-
         }
     }
 

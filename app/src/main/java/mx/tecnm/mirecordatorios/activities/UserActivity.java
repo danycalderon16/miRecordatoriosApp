@@ -41,6 +41,10 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     private CardView cardViewAmarillo;
     private CardView cardViewVerde;
     private CardView cardViewAzul;
+    private CardView cardViewNaranja;
+    private CardView cardViewDark;
+    private CardView cardViewCyan;
+    private CardView cardViewMorado;
 
     private SharedPreferences preferences;
     private int theme;
@@ -81,6 +85,16 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         cardViewAzul.setOnClickListener(this);
         cardViewAmarillo.setOnClickListener(this);
 
+        cardViewCyan = findViewById(R.id.cyan);
+        cardViewDark = findViewById(R.id.dark);
+        cardViewMorado = findViewById(R.id.morado);
+        cardViewNaranja = findViewById(R.id.naranja);
+
+        cardViewCyan.setOnClickListener(this);
+        cardViewDark.setOnClickListener(this);
+        cardViewMorado.setOnClickListener(this);
+        cardViewNaranja.setOnClickListener(this);
+
         String nombre = preferences.getString("nombre",user.getDisplayName());
         editText.setText(nombre);
         Picasso.get().load(user.getPhotoUrl()).into(imageViewUser);
@@ -117,9 +131,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 hideKeyboard(this);
                 break;
             case R.id.verde:
-                editor.putInt("tema",VERDRE);
+                editor.putInt("tema",VERDE);
                 try {
-                    Toast.makeText(this, "La aplicación se reiniciara", Toast.LENGTH_SHORT).show();
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -130,7 +143,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.rojo:
                 editor.putInt("tema",ROJO);
                 try {
-                    Toast.makeText(this, "La aplicación se reiniciara", Toast.LENGTH_SHORT).show();
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -150,6 +162,46 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.amarillo:
                 editor.putInt("tema",AMARILLO);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+                break;
+            case R.id.cyan:
+                editor.putInt("tema",CYAN);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+                break;
+            case R.id.morado:
+                editor.putInt("tema",MORADO);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+                break;
+            case R.id.dark:
+                editor.putInt("tema",DARK);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+                break;
+            case R.id.naranja:
+                editor.putInt("tema",NARANJA);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
