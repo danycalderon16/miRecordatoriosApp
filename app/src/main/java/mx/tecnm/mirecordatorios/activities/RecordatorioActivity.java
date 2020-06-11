@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,14 +32,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import static mx.tecnm.mirecordatorios.utils.Util.*;
 
 import mx.tecnm.mirecordatorios.R;
 
 public class RecordatorioActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private FirebaseFirestore db  = FirebaseFirestore.getInstance();
-    private CollectionReference usersRef  = db.collection("usuarios");
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference usersRef = db.collection("usuarios");
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -59,6 +62,9 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
     private String dia;
     private String descripcion;
 
+    private String oldToken = "";
+    private String newToken = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,18 +72,19 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
         user = mAuth.getCurrentUser();
 
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
-        theme = preferences.getInt("tema",0);
-        setCustomTheme(this,theme);
+        theme = preferences.getInt("tema", 0);
+        setCustomTheme(this, theme);
         setContentView(R.layout.activity_recordatorio);
 
         sendBind();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             accion = bundle.getInt("accion");
-            if(accion == EDITAR){
+            if (accion == EDITAR) {
                 hora = bundle.getString("hora");
                 dia = bundle.getString("dia");
                 descripcion = bundle.getString("descripcion");
+                oldToken = generateToken(dia, hora);
             }
         }
         setToolbar();
@@ -85,13 +92,16 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void setData() {
-        if(accion == EDITAR){
+        if (accion == EDITAR) {
             textViewDia.setText(dia);
             textViewHora.setText(hora);
             editTextDesc.setText(descripcion);
-        }else {
+        } else {
             setTime(textViewHora);
             setDate(textViewDia);
+            MenuItem menuItem = findViewById(R.id.item_delete);
+            menuItem.setVisible(false);
+
         }
     }
 
@@ -111,9 +121,9 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
         imageViewTime.setOnClickListener(this);
     }
 
-    private void setToolbar(){
+    private void setToolbar() {
         toolbar.setTitle(user.getDisplayName());
-        if(accion == EDITAR)
+        if (accion == EDITAR)
             toolbar.setTitle("Editar");
         else
             toolbar.setTitle("Crear");
@@ -126,37 +136,44 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
 
         String texto = editTextDesc.getText().toString();
 
-        if(texto.isEmpty()){
+        if (texto.isEmpty()) {
             Toast.makeText(this, "Añada una descripion por favor", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String hora  = textViewHora.getText().toString();
-        String dia = textViewDia.getText().toString();
+        String horaN = textViewHora.getText().toString();
+        String diaN = textViewDia.getText().toString();
 
         Map<String, Object> mapR = new HashMap<>();
-        mapR.put("id",generateToken(dia, hora));
-        mapR.put("descripcion",texto);
-        mapR.put("hora",hora);
-        mapR.put("dia", dia);
+        mapR.put("id", generateToken(diaN, horaN));
+        mapR.put("descripcion", texto);
+        mapR.put("hora", horaN);
+        mapR.put("dia", diaN);
 
+        if(!oldToken.isEmpty()) {
+            db.collection("usuarios")
+                    .document(user.getUid())
+                    .collection("recordatorios")
+                    .document(oldToken)
+                    .delete();
+            Toast.makeText(this, "Actualizado", Toast.LENGTH_SHORT).show();
+        }
         db.collection("usuarios")
                 .document(user.getUid())
                 .collection("recordatorios")
-                .document(generateToken(dia,hora)).set(mapR)
+                .document(generateToken(diaN, horaN)).set(mapR)
                 //.add(mapR)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.i("////////////","Agregado Corretamente");
-                        Toast.makeText(RecordatorioActivity.this, "Recordatorio Agregado", Toast.LENGTH_SHORT).show();
+                        Log.i("////////////", "Agregado Corretamente");
 
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.i("%%%%%%%%%%",e.getMessage());
+                        Log.i("%%%%%%%%%%", e.getMessage());
                         Toast.makeText(RecordatorioActivity.this, "Error", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -171,21 +188,31 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 goMain(this);
                 return true;
-                case R.id.item_delete:
-                goMain(this);
+            case R.id.item_delete:
+                confirmDialog("¿Esta seguro de eliminar el recordatorio?");
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void eliminarRecordatorio() {
+        db.collection("usuarios")
+                .document(user.getUid())
+                .collection("recordatorios")
+                .document(oldToken)
+                .delete();
+
+    }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.fab_save:
                 crearRecordatorio();
                 break;
@@ -199,5 +226,27 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
                 break;
 
         }
+    }
+
+    private void confirmDialog(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(RecordatorioActivity.this);
+        builder.setCancelable(true);
+        builder.setMessage(message);
+        builder.setPositiveButton("Sí",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        eliminarRecordatorio();
+                        goMain(RecordatorioActivity.this);
+                    }
+                });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
