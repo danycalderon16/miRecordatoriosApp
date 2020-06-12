@@ -30,11 +30,13 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Arrays;
@@ -50,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private Button login_facebook;
     private Button login_google;
+    private TextView sing_up;
 
     private FirebaseAuth mAuth;
     private FirebaseUser user;
@@ -82,6 +85,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         login_google = findViewById(R.id.google_button);
         login_facebook = findViewById(R.id.login_button);
+        sing_up = findViewById(R.id.txt_sing_up);
+
+        sing_up.setPaintFlags(sing_up.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
 
         login_google.setOnClickListener(this);
         login_facebook.setOnClickListener(this);
