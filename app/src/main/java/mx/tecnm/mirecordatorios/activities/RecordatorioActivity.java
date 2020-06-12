@@ -167,13 +167,6 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
 
 
         int color =  (int) (Math.random()* 7) + 1;
-        Map<String, Object> mapR = new HashMap<>();
-        mapR.put("id", generateToken(diaN, horaN));
-        mapR.put("descripcion", texto);
-        mapR.put("hora", horaN);
-        mapR.put("dia", diaN);
-        mapR.put("color",color);
-        mapR.put("importante", switch_importancia.isChecked());
 
         String token;
         if(switch_importancia.isChecked())
@@ -181,6 +174,13 @@ public class RecordatorioActivity extends AppCompatActivity implements View.OnCl
         else
             token = "aa"+generateToken(diaN,horaN);
 
+        Map<String, Object> mapR = new HashMap<>();
+        mapR.put("id", token);
+        mapR.put("descripcion", texto);
+        mapR.put("hora", horaN);
+        mapR.put("dia", diaN);
+        mapR.put("color",color);
+        mapR.put("importante", switch_importancia.isChecked());
         db.collection("usuarios")
                 .document(user.getUid())
                 .collection("recordatorios")
