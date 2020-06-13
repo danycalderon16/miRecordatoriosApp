@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private Button login_facebook;
     private Button login_google;
+    private Button email_button;
     private TextView sing_up;
 
     private FirebaseAuth mAuth;
@@ -86,11 +87,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         login_google = findViewById(R.id.google_button);
         login_facebook = findViewById(R.id.login_button);
         sing_up = findViewById(R.id.txt_sing_up);
+        email_button = findViewById(R.id.email_button);
 
         sing_up.setPaintFlags(sing_up.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
 
         login_google.setOnClickListener(this);
         login_facebook.setOnClickListener(this);
+        email_button.setOnClickListener(this);
+        sing_up.setOnClickListener(this);
 
     }
 
@@ -189,6 +193,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.login_button:
                 signInFacebook();
+                break;
+            case R.id.txt_sing_up:
+                startActivity(new Intent(this, RegisterActivity.class));
+                break;
+            case R.id.email_button:
+                startActivity(new Intent(this, LoginEmailActivity.class));
                 break;
         }
     }

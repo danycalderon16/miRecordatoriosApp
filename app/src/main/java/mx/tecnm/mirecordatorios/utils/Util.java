@@ -65,7 +65,7 @@ public class Util {
                 activity.setTheme(R.style.yellowTheme);
                 break;
             case VERDE:
-                activity.setTheme(R.style.AppTheme);
+                activity.setTheme(R.style.greenTheme);
                 break;
             case AZUL:
                 activity.setTheme(R.style.blueTheme);
@@ -222,35 +222,4 @@ public class Util {
         return  c;
     }
 
-
-    public static int getRandomColor(){
-        int j =  (int) (Math.random()* 10) + 1;
-        int color = R.color.colorPrimary;
-
-        switch (j){
-            case 1:color = R.color.red_primary;
-                break;
-            case 2:color = R.color.blue_primary;
-                break;
-            case 3:color = R.color.green_primary;
-                break;
-            case 4:color = R.color.yellow_primary;
-                break;
-            case 5:color = R.color.black;
-                break;
-            case 6:color = R.color.orange_primary;
-                break;
-            case 7:color = R.color.indigo_primary;
-                break;
-            case 8:color = R.color.pink_primary;
-                break;
-            case 9:color = R.color.brown_primary;
-                break;
-            case 10:color = R.color.yellow_primary;
-                break;
-
-        }
-
-        return color;
-    }
 }

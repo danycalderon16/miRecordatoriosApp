@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,6 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 import mx.tecnm.mirecordatorios.R;
 import mx.tecnm.mirecordatorios.models.Recordatorios;
-import static  mx.tecnm.mirecordatorios.utils.Util.*;
 
 public class MyAdapterReordatorios extends FirestoreRecyclerAdapter<Recordatorios, MyAdapterReordatorios.ViewHolder> {
 
@@ -70,8 +70,10 @@ public class MyAdapterReordatorios extends FirestoreRecyclerAdapter<Recordatorio
                 break;
         }
 
-        if(recordatorios.isImportante())
+        if(recordatorios.isImportante()) {
             viewHolder.view.setBackgroundResource(R.color.red_primary_dark);
+            viewHolder.imageView.setImageResource(R.drawable.ic_importante);
+        }
     }
 
     @NonNull
@@ -86,11 +88,13 @@ public class MyAdapterReordatorios extends FirestoreRecyclerAdapter<Recordatorio
         TextView descripcion;
         TextView hora;
         View view;
+        ImageView imageView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             descripcion = itemView.findViewById(R.id.descripcion);
             hora = itemView.findViewById(R.id.hora);
             view = itemView.findViewById(R.id.noteColorView);
+            imageView = itemView.findViewById(R.id.img_iportant);
         }
     }
 

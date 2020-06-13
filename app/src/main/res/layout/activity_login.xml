@@ -80,7 +80,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:gravity="center"
-        android:text="¿No tinens cuenta? Registrate aquí"
+        android:text="¿No tienes cuenta? Registrate aquí"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
