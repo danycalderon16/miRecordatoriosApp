@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private int alarmID = 1;
     private int theme;
+    private int type;
     private SharedPreferences settings;
 
     private MyAdapterReordatorios myAdapterReordatorios;
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+        type = preferences.getInt("type",0);
         theme = preferences.getInt("tema",0);
         setCustomTheme(this,theme);
 
@@ -89,7 +92,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         map.put("nombre",user.getDisplayName());
         map.put("email",user.getEmail());
 
-        usersRef.document(user.getUid()).set(map);
+        if(type == GOOGLE || type == FACEBOOK) {
+            usersRef.document(user.getUid()).set(map);
+            Log.i("####","nombre Cambiado");
+        }
 
         sendBind();
         setToolbar();
@@ -142,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setToolbar(){
-        String nombre = preferences.getString("nombre",user.getDisplayName());
+        String nombre = preferences.getString("nombre","Recordatorios");
         toolbar.setTitle(nombre);
         setSupportActionBar(toolbar);
     }
@@ -173,13 +179,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void logOut(){
-        int type = preferences.getInt("type",0);
         mAuth.signOut();
         if(type == FACEBOOK)
             com.facebook.login.LoginManager.getInstance().logOut();
         else
             mGoogleSignInClient.revokeAccess();
 
+        eliminarLoginPreferences();
         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
@@ -195,6 +201,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                   startActivity(intent);
                 break;
         }
+    }
+
+    private void eliminarLoginPreferences() {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("tema");
+        editor.remove("type");
+        editor.remove("nombre");
+        editor.apply();
     }
 
     private void sendNotification() {

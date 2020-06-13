@@ -11,7 +11,12 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import com.google.android.material.textfield.TextInputLayout;
 import android.widget.TimePicker;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -21,6 +26,7 @@ import mx.tecnm.mirecordatorios.activities.MainActivity;
 import mx.tecnm.mirecordatorios.services.AlarmReceiver;
 
 import static android.content.Context.ALARM_SERVICE;
+import static android.content.Context.VIBRATOR_SERVICE;
 import static java.util.Calendar.AM_PM;
 
 public class Util {
@@ -51,7 +57,7 @@ public class Util {
 
     public static final int GOOGLE = 2200;
     public static final int FACEBOOK = 2201;
-
+    public static final int EMAIL = 2202;
 
     public static final int EDITAR = 2205;
     public static final int CREAR = 2206;
@@ -88,12 +94,29 @@ public class Util {
 
     }
 
+    public static boolean validateEditText(TextInputLayout textInputLayout, Context context) {
+        String text = textInputLayout.getEditText().getText().toString().trim();
+        if (text.isEmpty()) {
+            textInputLayout.setError("Campo requerido");
+            if (Build.VERSION.SDK_INT >= 26) {
+                ((Vibrator) context.getSystemService(VIBRATOR_SERVICE)).vibrate(VibrationEffect.createOneShot(150, 10));
+            } else {
+                ((Vibrator) context.getSystemService(VIBRATOR_SERVICE)).vibrate(150);
+            }
+            return false;
+        } else {
+            textInputLayout.setError(null);
+            return true;
+        }
+    }
+
 
     public static void goMain(Activity activity) {
         Intent intent = new Intent(activity, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
     }
+
 
     public static void setDate(TextView textView) {
         dia = c.get(Calendar.DAY_OF_MONTH);

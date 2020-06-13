@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:focusable="true"
-            android:hint="Correo Electronico"
+            android:hint="Nombre"
             android:inputType="textEmailAddress"
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -92,7 +92,7 @@
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/ed_pass_reg"
+            android:id="@+id/et_pass_reg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Contraseña"

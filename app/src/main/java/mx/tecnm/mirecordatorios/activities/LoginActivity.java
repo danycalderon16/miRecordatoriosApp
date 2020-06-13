@@ -72,10 +72,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         preferences = getSharedPreferences("login", Context.MODE_PRIVATE);
 
-
         mAuth = FirebaseAuth.getInstance();
         callbackManager = CallbackManager.Factory.create();
-
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
